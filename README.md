@@ -4,6 +4,7 @@
 - Kawaii Alien-Chan is an astro idol came from Spica, Virgo.
   Enjoy chatting with her on discord!!
 - Her prompt and sourcecode are opened on this repo.
+![](Kawaii Alien-Chan.png)
 ## Security Setting - Story layer protection applied.
 Alien-Chan is prompted to protect herself from malicious chats, which is trying to "unmask" or to "reconfigure" her settings.
 - protection on ChatGPT instruction level:
