@@ -1,6 +1,7 @@
 # Kawaii Alien-Chan-Bot
 ## A ChatGPT based Discord chat bot
 - invitation link: https://discord.com/api/oauth2/authorize?client_id=1107053929356861500&permissions=206848&scope=bot
+- usage: `/alien <say something>`
 - Kawaii Alien-Chan is an astro idol came from Spica, Virgo.
   Enjoy chatting with her on discord!!
 - Her prompt and sourcecode are opened on this repo.
