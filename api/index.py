@@ -3,7 +3,7 @@ import discord
 import requests
 import json
 import os
-from keep_alive import keep_alive
+from api.keep_alive import keep_alive
 
 class Alien_Chan:
     def __init__(self,json_pref):
