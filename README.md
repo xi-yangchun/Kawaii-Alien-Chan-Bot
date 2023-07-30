@@ -1,4 +1,4 @@
-# Kawaii Alien-Chan-Bot
+# Kawaii Alien-Chan-Bot(Vercel)
 ## A ChatGPT based Discord chat bot
 - invitation link: https://discord.com/api/oauth2/authorize?client_id=1107053929356861500&permissions=206848&scope=bot
 - usage: `/alien <say something>`
