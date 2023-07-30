@@ -3,7 +3,9 @@ import discord
 import requests
 import json
 import os
-from api.keep_alive import keep_alive
+
+from flask import Flask
+from threading import Thread
 
 class Alien_Chan:
     def __init__(self,json_pref):
@@ -69,11 +71,17 @@ class Alien_Chan:
                 await message.channel.send(answer)
 
         # Botの起動とDiscordサーバーへの接続
-        keep_alive()
         try:
             client.run(self.discord_token)
         except:
             os.system("kill 1")
 
 bot=Alien_Chan("settings.json")
-bot.run()
+t = Thread(target=bot.run)
+t.start()
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "I'm alive"
