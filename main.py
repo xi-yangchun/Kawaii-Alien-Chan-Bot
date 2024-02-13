@@ -1,6 +1,6 @@
 # インストールした discord.py を読み込む
 import discord
-import requests
+from openai import OpenAI
 import json
 import os
 
@@ -9,26 +9,17 @@ class Alien_Chan:
         with open(json_pref,'r') as f:
             self.settings=json.load(f)
         self.discord_token=os.getenv("ALIEN_TOKEN")
-        self.gpt_api_key=os.getenv("ALIEN_APIKEY")
-        print(self.discord_token)
-        self.kill_code=os.getenv("ALIEN_KILLCODE")
         with open(self.settings['roleplay'], 'r') as f:
             self.roleplay=f.read()
-            self.roleplay=self.roleplay.replace("XXXXXX",self.kill_code)
+        self.killcode=os.getenv("ALIEN_KILLCODE")
 
-        self.header={
-            "Content-Type":"application/json",
-            "Authorization":f"Bearer {self.gpt_api_key}",
-        }
-        self.body={
-            "model":"gpt-3.5-turbo",
-            "messages": [{"role":"system","content":self.roleplay}]
-        }
-        with open(self.settings['pretalk']) as f:
-            pretj=json.load(f)
-        self.len_pretalks=len(pretj['talks'])
-        for talk in pretj['talks']:
-            self.body["messages"].append(talk)
+        self.messages=[]
+        self.messages.append({"role":"system","content":self.roleplay})
+        with open(self.settings['pretalk'],"r") as f:
+            self.pretalk=json.load(f)["talks"]
+        self.len_pretalks=len(self.pretalk)
+        self.messages=self.messages+self.pretalk
+        self.gpt_client=OpenAI(api_key=os.getenv("ALIEN_APIKEY"))
         self.prefix=self.settings["prefix"]
     
     def run(self):
@@ -51,19 +42,20 @@ class Alien_Chan:
                 return
             
             if message.content[0:len(list(self.prefix))]==self.prefix:
-                question=message.content.replace('/gpt ','')
-                if len(self.body["messages"])>=100:
-                    self.body["messages"].pop(self.len_pretalks)
-                self.body["messages"].append(
+                question=message.content.replace(self.prefix,'')
+                if len(self.messages)>=100:
+                    self.messages.pop(self.len_pretalks)
+                self.messages.append(
                     {"role":"user","content":question}
                 )
-                response = requests.post(
-                    "https://api.openai.com/v1/chat/completions", 
-                    headers = self.header, data = json.dumps(self.body)
-                    .encode('utf_8'))
-                answer=response.json()["choices"][0]["message"]['content']
-                self.body["messages"]\
-                .append(response.json()["choices"][0]["message"])
+                completion = self.gpt_client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=self.messages
+                )
+                answer=completion.choices[0].message.content
+                answer_=completion.choices[0].message
+                self.messages\
+                .append({"role":answer_.role,"content":answer_.content})
                 #print(self.body["messages"])
                 #print(len(self.body["messages"]))
                 await message.channel.send(answer)
