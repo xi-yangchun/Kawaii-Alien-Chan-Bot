@@ -3,15 +3,15 @@ import discord
 import requests
 import json
 import os
-from keep_alive import keep_alive
 
 class Alien_Chan:
     def __init__(self,json_pref):
         with open(json_pref,'r') as f:
             self.settings=json.load(f)
-        self.discord_token=os.getenv("DISCORD_TOKEN")
-        self.gpt_api_key=os.getenv("CHATGPT_APIKEY")
-        self.kill_code=os.getenv("KILL_CODE")
+        self.discord_token=os.getenv("ALIEN_TOKEN")
+        self.gpt_api_key=os.getenv("ALIEN_APIKEY")
+        print(self.discord_token)
+        self.kill_code=os.getenv("ALIEN_KILLCODE")
         with open(self.settings['roleplay'], 'r') as f:
             self.roleplay=f.read()
             self.roleplay=self.roleplay.replace("XXXXXX",self.kill_code)
@@ -69,7 +69,6 @@ class Alien_Chan:
                 await message.channel.send(answer)
 
         # Botの起動とDiscordサーバーへの接続
-        keep_alive()
         try:
             client.run(self.discord_token)
         except:
